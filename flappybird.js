@@ -62,8 +62,7 @@ window.onload = function() {
 
     requestAnimationFrame(update);
     setInterval(placePipes, 1500); //every 1.5 seconds
-    document.addEventListener("keydown", handleKeydown);
-    document.addEventListener("touchstart", jump);
+    document.addEventListener("keydown", moveBird);
 }
 
 function update() {
@@ -146,29 +145,24 @@ function placePipes() {
     pipeArray.push(bottomPipe);
 }
 
-function handleKeydown() {
-  if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
-    jump()
-  }
-}
+function moveBird(e) {
+    if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
+        //jump
+        velocityY = -6;
 
-function jump() {
-  //jump
-  velocityY = -6;
-
-  //reset game
-  if (gameOver) {
-      bird.y = birdY;
-      pipeArray = [];
-      score = 0;
-      gameOver = false;
-  }
-}
+        //reset game
+        if (gameOver) {
+            bird.y = birdY;
+            pipeArray = [];
+            score = 0;
+            gameOver = false;
+        }
+    }
 }
 
 function detectCollision(a, b) {
-    return  a.x < b.x + b.width &&
-            a.x + a.width > b.x &&
-            a.y < b.y + b.height &&
-            a.y + a.height > b.y;
+    return a.x < b.x + b.width &&   //a's top left corner doesn't reach b's top right corner
+           a.x + a.width > b.x &&   //a's top right corner passes b's top left corner
+           a.y < b.y + b.height &&  //a's top left corner doesn't reach b's bottom left corner
+           a.y + a.height > b.y;    //a's bottom left corner passes b's top left corner
 }
